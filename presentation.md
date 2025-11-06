@@ -1070,5 +1070,6 @@ sample1,/path/reads.fq.gz
 
 **End of Presentation**
 
-🧬🦠 **Happy Viral Discovery!** ✨
+
+
 
