@@ -1304,8 +1304,7 @@ MIT License
 ├── metagenome_assembly_classification_en.config       # Configuration file
 ├── run_metagenome_assembly_classification_en.sh       # SLURM submission script
 ├── samplesheet_short.csv                              # Short-read sample sheet
-├── samplesheet_long.csv                               # Long-read sample sheet
-└── README.md                                          # This documentation
+└── samplesheet_long.csv                               # Long-read sample sheet
 ```
 
 ### Recommended Directory Structure
@@ -1326,6 +1325,7 @@ project_root/
 ├── results_long/
 └── work/  (Nextflow working directory)
 ```
+
 
 
 
