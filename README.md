@@ -4,9 +4,9 @@
 
 This is a Nextflow-based viral metagenome workflow using **complementary strategies** to maximize virus identification coverage. Features **dual-assembler comparison** for short reads (MEGAHIT + SPAdes) and **dual-track analysis** for long reads (viralFlye feature-based + Diamond similarity-based). Supports both short-read (**Illumina**) and long-read (**Nanopore/PacBio**) data types.
 
-**Version**: 4.1.1  
+**Version**: 4.2.0  
 **Author**: Sihua Peng  
-**Last Updated**: 2025-11-06
+**Last Updated**: 2025-11-17
 
 ---
 
@@ -21,6 +21,10 @@ This is a Nextflow-based viral metagenome workflow using **complementary strateg
    - Complete 7-level taxonomic comparison: Kingdom → Phylum → Class → Order → Family → Genus → Species
    - Side-by-side comparison of MEGAHIT vs SPAdes at each taxonomic level
    - Identify assembler-specific and shared discoveries
+6. **Viral Abundance Calculation** (if enabled): Calculate RPM and RPKM for identified viral contigs
+   - BWA alignment of reads to viral contigs (short reads)
+   - Read counting and normalization
+   - Generate abundance reports in both text and CSV formats
 
 ### 🦠 Long-Read Workflow (Nanopore/PacBio) - Dual-Track Complementary Analysis
 1. **Metagenome Assembly**: MetaFlye (--meta mode)
@@ -39,6 +43,10 @@ This is a Nextflow-based viral metagenome workflow using **complementary strateg
 7. **Comparative Analysis**: Compare results from both tracks for complementary virus identification
    - Missed by viralFlye but found by Diamond → distant viruses
    - Not found by Diamond but identified by viralFlye → new viral features without similar sequences
+8. **Viral Abundance Calculation** (if enabled): Calculate RPM and RPKM for identified viral contigs
+   - minimap2 alignment of long reads to viral contigs
+   - Read counting and normalization
+   - Generate abundance reports in both text and CSV formats
 
 ---
 
@@ -227,11 +235,17 @@ results_short/
 │   └── *_megahit_diamond.txt  # Classification results
 ├── diamond_spades/             # SPAdes Diamond classification
 │   └── *_spades_diamond.txt   # Classification results
-└── merged_reports/             # Comprehensive analysis reports
-    ├── *_merged_report.txt    # Text format comprehensive report
-    ├── *_merged_report.csv    # CSV format detailed comparison
-    ├── *_megahit_with_taxonomy.txt  # With taxonomic information
-    └── *_spades_with_taxonomy.txt   # With taxonomic information
+├── merged_reports/             # Comprehensive analysis reports
+│   ├── *_merged_report.txt    # Text format comprehensive report
+│   ├── *_merged_report.csv    # CSV format detailed comparison
+│   ├── *_megahit_with_taxonomy.txt  # With taxonomic information
+│   └── *_spades_with_taxonomy.txt   # With taxonomic information
+├── abundance_megahit/          # Viral abundance for MEGAHIT (if enabled)
+│   ├── *_megahit_abundance.txt # Abundance report with RPM and RPKM (text format)
+│   └── *_megahit_abundance.csv # Abundance data with RPM and RPKM (CSV format)
+└── abundance_spades/           # Viral abundance for SPAdes (if enabled)
+    ├── *_spades_abundance.txt  # Abundance report with RPM and RPKM (text format)
+    └── *_spades_abundance.csv  # Abundance data with RPM and RPKM (CSV format)
 ```
 
 ### Long-Read Output (results_long/) - Dual-Track Analysis
@@ -263,15 +277,21 @@ results_long/
 │   ├── *_viralflye_diamond_with_taxonomy.txt  # Complete taxonomic info (22 columns)
 │   └── *_viralflye_taxonomy_summary.txt       # Statistical summary
 │
-└── consensus_analysis/                   # Dual-track comparison and consensus analysis ⭐ Recommended!
-    ├── *_consensus_viruses.txt           # ★★★ Consensus viruses (confirmed by both methods, highest confidence)
-    │                                     #     Typical: ~180 contigs, ~850 viral proteins
-    ├── *_metaflye_only_viruses.txt       # ★ MetaFlye-only (distant viral candidates, needs verification)
-    │                                     #     Typical: ~500 contigs, ~950 viral proteins
-    ├── *_viralflye_only_viruses.txt      # ★★ viralFlye-only (feature-based but sequence-unique)
-    │                                     #     Typical: 0-10 contigs (rare)
-    └── *_dual_track_comparison.txt       # Detailed comparison report (with complete stats and taxonomic distribution)
-                                          #     Includes: Kingdom/Phylum/Family/Genus/Species
+├── consensus_analysis/                   # Dual-track comparison and consensus analysis ⭐ Recommended!
+│   ├── *_consensus_viruses.txt           # ★★★ Consensus viruses (confirmed by both methods, highest confidence)
+│   │                                     #     Typical: ~180 contigs, ~850 viral proteins
+│   ├── *_metaflye_only_viruses.txt       # ★ MetaFlye-only (distant viral candidates, needs verification)
+│   │                                     #     Typical: ~500 contigs, ~950 viral proteins
+│   ├── *_viralflye_only_viruses.txt      # ★★ viralFlye-only (feature-based but sequence-unique)
+│   │                                     #     Typical: 0-10 contigs (rare)
+│   └── *_dual_track_comparison.txt       # Detailed comparison report (with complete stats and taxonomic distribution)
+│                                          #     Includes: Kingdom/Phylum/Family/Genus/Species
+├── abundance_metaflye/                   # Viral abundance for MetaFlye (if enabled)
+│   ├── *_metaflye_abundance.txt          # Abundance report with RPM and RPKM (text format)
+│   └── *_metaflye_abundance.csv         # Abundance data with RPM and RPKM (CSV format)
+└── abundance_viralflye/                  # Viral abundance for viralFlye (if enabled)
+    ├── *_viralflye_abundance.txt         # Abundance report with RPM and RPKM (text format)
+    └── *_viralflye_abundance.csv         # Abundance data with RPM and RPKM (CSV format)
 ```
 
 ---
@@ -536,6 +556,7 @@ Original 13 columns + the following taxonomic columns:
 --fastp_min_length        # Minimum read length (default: 50)
 --megahit_min_contig_len  # MEGAHIT minimum contig length (default: 1000)
 --skip_merge_reports      # Skip comprehensive reports (default: false)
+--skip_abundance          # Skip viral abundance calculation (default: false)
 ```
 
 ### Long-Read Parameters
@@ -545,6 +566,8 @@ Original 13 columns + the following taxonomic columns:
 --pfam_hmm                # Pfam-A HMM database path
 --viralflye_min_length    # Minimum viral length (default: 5000)
 --viralflye_completeness  # Completeness threshold (default: 0.5)
+--skip_abundance          # Skip viral abundance calculation (default: false)
+--long_read_preset        # minimap2 preset for long reads (default: 'map-ont' for Nanopore, 'map-pb' for PacBio)
 ```
 
 ### Taxonomy Parameters
@@ -1243,6 +1266,16 @@ For questions or suggestions, please contact the project maintainer.
 ---
 
 ## Update Log
+
+### v4.2.0 (2025-11-17)
+- ✨ **Viral abundance calculation**: Added RPM and RPKM calculation for identified viral contigs
+  - Short reads: BWA alignment of reads to viral contigs, read counting using samtools idxstats
+  - Long reads: minimap2 alignment of long reads to viral contigs, direct SAM parsing for read counting
+  - Generates abundance reports in both text and CSV formats
+  - Merges abundance data with Diamond classification information (taxonomy, identity, etc.)
+- 📊 Abundance reports include: contig ID, contig length, mapped reads, RPM, RPKM, and full taxonomic classification
+- ⚙️ Configurable via `--skip_abundance` parameter (default: false, abundance calculation enabled)
+- 🔧 Resource allocation: 8 CPUs, 16 GB memory, 12 hours time limit per abundance calculation process
 
 ### v4.1.1 (2025-11-06)
 - 📊 **Enhanced short-read taxonomic comparison**: Added complete 7-level taxonomic comparison in merged reports

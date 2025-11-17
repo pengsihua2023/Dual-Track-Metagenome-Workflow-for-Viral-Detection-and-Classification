@@ -2,7 +2,7 @@
 
 **Nextflow Pipeline with Dual-Assembler (Short Reads) and Dual-Track (Long Reads) Analysis**
 
-Version 4.1.1 | 2025-11-06
+Version 4.2.0 | 2025-11-17
 
 ---
 
@@ -15,10 +15,12 @@ A **comprehensive viral identification workflow** with two analysis modes:
 **Short Reads (Illumina)**:
 - 🧬 Dual-assembler comparison: MEGAHIT + SPAdes
 - 📊 7-level taxonomic comparison
+- 📈 Viral abundance calculation: RPM and RPKM
 
 **Long Reads (Nanopore/PacBio)**:
 - 🔍 Dual-track analysis: viralFlye (features) + Diamond (similarity)
 - 🎯 3-tier confidence classification
+- 📈 Viral abundance calculation: RPM and RPKM
 
 **Key Innovation**: Complementary methods maximize viral discovery coverage
 
@@ -663,11 +665,17 @@ results_short/
 ├── assembly_spades/           # SPAdes contigs
 ├── diamond_megahit/           # Classification results
 ├── diamond_spades/            # Classification results
-└── merged_reports/            # ⭐ Key outputs
-    ├── *_merged_report.txt    # 7-level taxonomy comparison
-    ├── *_merged_report.csv    # Machine-readable comparison
-    ├── *_megahit_with_taxonomy.txt   # 22-column enhanced
-    └── *_spades_with_taxonomy.txt    # 22-column enhanced
+├── merged_reports/            # ⭐ Key outputs
+│   ├── *_merged_report.txt    # 7-level taxonomy comparison
+│   ├── *_merged_report.csv    # Machine-readable comparison
+│   ├── *_megahit_with_taxonomy.txt   # 22-column enhanced
+│   └── *_spades_with_taxonomy.txt    # 22-column enhanced
+├── abundance_megahit/         # ⭐ Viral abundance (RPM/RPKM)
+│   ├── *_megahit_abundance.txt
+│   └── *_megahit_abundance.csv
+└── abundance_spades/          # ⭐ Viral abundance (RPM/RPKM)
+    ├── *_spades_abundance.txt
+    └── *_spades_abundance.csv
 ```
 
 ---
@@ -686,11 +694,17 @@ results_long/
 │   ├── prodigal_viralflye/
 │   ├── diamond_viralflye/
 │   └── taxonomy_viralflye/
-└── consensus_analysis/        # ⭐ Key outputs
-    ├── *_consensus_viruses.txt       # ★★★ Use this first
-    ├── *_metaflye_only_viruses.txt   # ★ Explore for distant viruses
-    ├── *_viralflye_only_viruses.txt  # ★★ Rare, feature-based
-    └── *_dual_track_comparison.txt   # Full statistical report
+├── consensus_analysis/        # ⭐ Key outputs
+│   ├── *_consensus_viruses.txt       # ★★★ Use this first
+│   ├── *_metaflye_only_viruses.txt   # ★ Explore for distant viruses
+│   ├── *_viralflye_only_viruses.txt  # ★★ Rare, feature-based
+│   └── *_dual_track_comparison.txt   # Full statistical report
+├── abundance_metaflye/        # ⭐ Viral abundance (RPM/RPKM)
+│   ├── *_metaflye_abundance.txt
+│   └── *_metaflye_abundance.csv
+└── abundance_viralflye/       # ⭐ Viral abundance (RPM/RPKM)
+    ├── *_viralflye_abundance.txt
+    └── *_viralflye_abundance.csv
 ```
 
 ---
