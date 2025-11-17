@@ -1022,8 +1022,6 @@ ls results_long/consensus_analysis/
 ✅ **Confidence-based classification** (3-tier for long reads)  
 ✅ **Production-ready and validated**
 
-**Ready to discover viruses in your metagenomes!** 🦠🧬
-
 ---
 
 ## Appendix: Technical Specifications
@@ -1081,6 +1079,7 @@ sample1,/path/reads.fq.gz
 ---
 
 **End of Presentation**
+
 
 
 
