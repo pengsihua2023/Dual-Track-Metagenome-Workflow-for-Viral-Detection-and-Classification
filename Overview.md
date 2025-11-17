@@ -972,7 +972,7 @@ https://github.com/[your-repo]/rvdb-viral-metagenome-nf
 
 ```bash
 # 1. Clone repository
-git clone [your-repo-url]
+git clone https://github.com/pengsihua2023/rvdb-viral-metagenome-nf
 cd rvdb-viral-metagenome-nf
 
 # 2. Prepare test data
@@ -1001,8 +1001,8 @@ ls results_long/consensus_analysis/
 
 ### Contact
 
-- 📧 Email: [your-email]
-- 💻 GitHub: [your-github-repo]
+- 📧 Email: Sihua.peng@uga.edu
+- 💻 GitHub: https://github.com/pengsihua2023/rvdb-viral-metagenome-nf
 - 📖 Documentation: README_EN.md
 
 ### Getting Started
@@ -1013,8 +1013,6 @@ ls results_long/consensus_analysis/
 4. Report issues or suggestions via GitHub Issues
 
 ---
-
-## Thank You!
 
 ### Workflow Summary
 
@@ -1083,6 +1081,7 @@ sample1,/path/reads.fq.gz
 ---
 
 **End of Presentation**
+
 
 
 
