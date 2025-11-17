@@ -1069,17 +1069,10 @@ sample,fastq_long
 sample1,/path/reads.fq.gz
 ```
 
-### Output Format
-
-**Enhanced Diamond output** (22 columns):
-- Columns 1-13: Standard Diamond BLASTP format
-- Columns 14-22: Taxonomic lineage (organism_name → species)
-
-**Tab-separated**, compatible with Excel, R, Python pandas
-
 ---
 
-**End of Presentation**
+
+
 
 
 
