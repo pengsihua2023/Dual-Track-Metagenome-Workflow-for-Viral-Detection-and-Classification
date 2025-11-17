@@ -926,7 +926,7 @@ results_long/
 ```
 RVDB-Based Dual-Method Viral Metagenome Analysis Pipeline
 Version 4.2.0 (2025)
-https://github.com/[your-repo]/rvdb-dual-method-viral-metagenome
+https://github.com/[your-repo]/rvdb-viral-metagenome-nf
 ```
 
 ### Core Tools to Cite
@@ -973,7 +973,7 @@ https://github.com/[your-repo]/rvdb-dual-method-viral-metagenome
 ```bash
 # 1. Clone repository
 git clone [your-repo-url]
-cd rvdb-dual-method-viral-metagenome
+cd rvdb-viral-metagenome-nf
 
 # 2. Prepare test data
 cat > samplesheet_test.csv << EOF
