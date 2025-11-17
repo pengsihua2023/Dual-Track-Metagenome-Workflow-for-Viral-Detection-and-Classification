@@ -74,7 +74,7 @@ Paired-end Reads → fastp QC
 ```
 Long Reads → MetaFlye (--meta)
                 ↓
-    All Contigs (~1,213)
+    All Contigs (~1,213，Example)
                 ↓
     ┌───────────┴────────────────┐
     ↓                            ↓
@@ -1083,6 +1083,7 @@ sample1,/path/reads.fq.gz
 ---
 
 **End of Presentation**
+
 
 
 
